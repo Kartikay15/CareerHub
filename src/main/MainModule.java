@@ -22,9 +22,10 @@ public class MainModule {
             System.out.println("Menu:");
             System.out.println("1. Post Job");
             System.out.println("2. Create Applicant Profile");
-            System.out.println("3. Apply for Job4");
+            System.out.println("3. Apply for Job");
             System.out.println("4. List Jobs");
-            System.out.println("5. Exit");
+            System.out.println("5. Get Jobs by Salary Range"); // New option added
+            System.out.println("6. Exit");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
@@ -84,15 +85,20 @@ public class MainModule {
                     System.out.print("Enter Job ID: ");
                     int jobID = scanner.nextInt();
                     scanner.nextLine();
+                    System.out.print("Enter Applicant ID: ");
+                    int applicantID = scanner.nextInt(); // Assuming the applicant ID is known
+                    scanner.nextLine();
                     System.out.print("Enter Cover Letter: ");
                     String coverLetter = scanner.nextLine();
+
                     JobApplication application = new JobApplication();
                     application.setJobID(jobID);
-                    application.setApplicantID(1); // Assume the applicantID is known
+                    application.setApplicantID(applicantID);
                     application.setApplicationDate(LocalDateTime.now());
                     application.setCoverLetter(coverLetter);
+
                     dbManager.insertJobApplication(application);
-                    System.out.println("Application submitted.");
+                    System.out.println("Application submitted successfully.");
                     break;
 
                 case 4:
@@ -104,13 +110,34 @@ public class MainModule {
                     break;
 
                 case 5:
+                    // Get jobs by salary range
+                    System.out.print("Enter Minimum Salary: ");
+                    double minSalary = scanner.nextDouble();
+                    System.out.print("Enter Maximum Salary: ");
+                    double maxSalary = scanner.nextDouble();
+                    List<JobListing> filteredJobs = dbManager.getJobsBySalaryRange(minSalary, maxSalary);
+
+                    if (filteredJobs.isEmpty()) {
+                        System.out.println("No jobs found in this salary range.");
+                    } else {
+                        System.out.println("Jobs in the specified salary range:");
+                        for (JobListing jobListing : filteredJobs) {
+                            System.out.println("Job ID: " + jobListing.getJobID() +
+                                    ", Title: " + jobListing.getJobTitle() +
+                                    ", Salary: " + jobListing.getSalary() +
+                                    ", Company ID: " + jobListing.getCompanyID());
+                        }
+                    }
+                    break;
+
+                case 6:
                     System.out.println("Exiting...");
                     break;
 
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
-        } while (choice != 5);
+        } while (choice != 6);
 
         scanner.close();
     }

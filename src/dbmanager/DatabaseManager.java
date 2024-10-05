@@ -102,4 +102,9 @@ public class DatabaseManager {
     public List<JobApplication> getApplicationsForJob(int jobID) throws DatabaseConnectionException {
         return jobBoardDAO.getApplicationsForJob(jobID);
     }
+
+    // New method to get jobs by salary range
+    public List<JobListing> getJobsBySalaryRange(double minSalary, double maxSalary) throws DatabaseConnectionException {
+        return jobBoardDAO.getJobsBySalaryRange(minSalary, maxSalary);
+    }
 }

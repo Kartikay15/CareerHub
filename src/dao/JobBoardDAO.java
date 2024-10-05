@@ -17,4 +17,6 @@ public interface JobBoardDAO {
     List<Company> getCompanies() throws DatabaseConnectionException;
     List<Applicant> getApplicants() throws DatabaseConnectionException;
     List<JobApplication> getApplicationsForJob(int jobID) throws DatabaseConnectionException;
+
+    List<JobListing> getJobsBySalaryRange(double minSalary, double maxSalary);
 }
