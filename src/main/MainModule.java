@@ -30,7 +30,7 @@ public class MainModule {
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     // Post a job
                     System.out.print("Enter Company ID: ");
                     int companyId = scanner.nextInt();
@@ -56,9 +56,8 @@ public class MainModule {
                     job.setPostedDate(LocalDateTime.now());
                     dbManager.insertJobListing(job);
                     System.out.println("Job posted successfully.");
-                    break;
-
-                case 2:
+                }
+                case 2 -> {
                     // Create applicant profile
                     System.out.print("Enter First Name: ");
                     String firstName = scanner.nextLine();
@@ -78,9 +77,8 @@ public class MainModule {
                     applicant.setResume(resume);
                     dbManager.insertApplicant(applicant);
                     System.out.println("Applicant profile created.");
-                    break;
-
-                case 3:
+                }
+                case 3 -> {
                     // Apply for a job
                     System.out.print("Enter Job ID: ");
                     int jobID = scanner.nextInt();
@@ -90,33 +88,28 @@ public class MainModule {
                     scanner.nextLine();
                     System.out.print("Enter Cover Letter: ");
                     String coverLetter = scanner.nextLine();
-
                     JobApplication application = new JobApplication();
                     application.setJobID(jobID);
                     application.setApplicantID(applicantID);
                     application.setApplicationDate(LocalDateTime.now());
                     application.setCoverLetter(coverLetter);
-
                     dbManager.insertJobApplication(application);
                     System.out.println("Application submitted successfully.");
-                    break;
-
-                case 4:
+                }
+                case 4 -> {
                     // List jobs
                     List<JobListing> jobs = dbManager.getJobListings();
                     for (JobListing j : jobs) {
                         System.out.println("Job ID: " + j.getJobID() + ", Title: " + j.getJobTitle() + ", Salary: " + j.getSalary());
                     }
-                    break;
-
-                case 5:
+                }
+                case 5 -> {
                     // Get jobs by salary range
                     System.out.print("Enter Minimum Salary: ");
                     double minSalary = scanner.nextDouble();
                     System.out.print("Enter Maximum Salary: ");
                     double maxSalary = scanner.nextDouble();
                     List<JobListing> filteredJobs = dbManager.getJobsBySalaryRange(minSalary, maxSalary);
-
                     if (filteredJobs.isEmpty()) {
                         System.out.println("No jobs found in this salary range.");
                     } else {
@@ -128,14 +121,9 @@ public class MainModule {
                                     ", Company ID: " + jobListing.getCompanyID());
                         }
                     }
-                    break;
-
-                case 6:
-                    System.out.println("Exiting...");
-                    break;
-
-                default:
-                    System.out.println("Invalid choice. Try again.");
+                }
+                case 6 -> System.out.println("Exiting...");
+                default -> System.out.println("Invalid choice. Try again.");
             }
         } while (choice != 6);
 

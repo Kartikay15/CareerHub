@@ -8,7 +8,6 @@ import exception.DatabaseConnectionException;
 import util.DBConnUtil;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,30 +183,32 @@ public class JobBoardDAOImpl implements JobBoardDAO {
                 "JOIN Companies c ON j.CompanyID = c.CompanyID " +
                 "WHERE j.Salary BETWEEN ? AND ?";
 
-        try (Connection connection = DBConnUtil.getConnection("db.properties");
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = DBConnUtil.getConnection("db.properties")) {
+            assert connection != null;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setDouble(1, minSalary);
-            preparedStatement.setDouble(2, maxSalary);
-            ResultSet resultSet = preparedStatement.executeQuery();
+                preparedStatement.setDouble(1, minSalary);
+                preparedStatement.setDouble(2, maxSalary);
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                JobListing job = new JobListing();
-                job.setJobID(resultSet.getInt("JobID"));
-                job.setJobTitle(resultSet.getString("JobTitle"));
-                job.setSalary(resultSet.getDouble("Salary"));
-                job.setCompanyID(resultSet.getInt("CompanyID"));
-                job.setJobDescription(resultSet.getString("JobDescription"));
-                job.setJobLocation(resultSet.getString("JobLocation"));
-                job.setJobType(resultSet.getString("JobType"));
+                while (resultSet.next()) {
+                    JobListing job = new JobListing();
+                    job.setJobID(resultSet.getInt("JobID"));
+                    job.setJobTitle(resultSet.getString("JobTitle"));
+                    job.setSalary(resultSet.getDouble("Salary"));
+                    job.setCompanyID(resultSet.getInt("CompanyID"));
+                    job.setJobDescription(resultSet.getString("JobDescription"));
+                    job.setJobLocation(resultSet.getString("JobLocation"));
+                    job.setJobType(resultSet.getString("JobType"));
 
-                // Use resultSet.getTimestamp() to get the Timestamp and convert to LocalDateTime
-                Timestamp postedDate = resultSet.getTimestamp("PostedDate");
-                if (postedDate != null) {
-                    job.setPostedDate(postedDate.toLocalDateTime());
+                    // Use resultSet.getTimestamp() to get the Timestamp and convert to LocalDateTime
+                    Timestamp postedDate = resultSet.getTimestamp("PostedDate");
+                    if (postedDate != null) {
+                        job.setPostedDate(postedDate.toLocalDateTime());
+                    }
+
+                    jobListings.add(job);
                 }
-
-                jobListings.add(job);
             }
         } catch (SQLException e) {
             e.printStackTrace();

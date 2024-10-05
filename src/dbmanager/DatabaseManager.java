@@ -21,7 +21,6 @@ public class DatabaseManager {
     }
 
     public void initializeDatabase() throws DatabaseConnectionException {
-        // SQL commands to create tables if they do not exist
         String createJobsTable = "CREATE TABLE IF NOT EXISTS Jobs (" +
                 "JobID INT AUTO_INCREMENT PRIMARY KEY, " +
                 "CompanyID INT, " +
